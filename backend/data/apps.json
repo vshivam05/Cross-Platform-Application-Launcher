@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1745518724980,
+    "name": "youtube",
+    "path": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "param": "https://www.youtube.com"
+  },
+  {
+    "id": 1745518776386,
+    "name": "Google.com",
+    "path": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "param": "https://www.google.com"
+  }
+]
