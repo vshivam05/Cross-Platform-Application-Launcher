@@ -7,6 +7,14 @@ const {
   killMediaPlayer,
 } = require("../services/mediaPlayerService");
 
+const {
+  getStatus,
+  playPause,
+  stop,
+  next,
+  setVolume,
+} = require("../services/mediaPlayerService");
+
 let runningProcess = null;
 let mediaPlayerRunning = false;
 
@@ -62,6 +70,7 @@ exports.quitApp = (req, res) => {
   res.send({ status: "stopped" });
 };
 
+
 exports.mediaPlayerControl = async (req, res) => {
   try {
     const { command } = req.body;
@@ -69,6 +78,60 @@ exports.mediaPlayerControl = async (req, res) => {
     res.send({ status: "command sent" });
   } catch (error) {
     console.error("Error sending media player command:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getVLCStatus = async (req, res) => {
+  try {
+    const status = await getStatus();
+    res.json(status);
+  } catch (error) {
+    console.error("Error getting VLC status:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.playPauseVLC = async (req, res) => {
+  try {
+    await playPause();
+    res.json({ status: "play/pause toggled" });
+  } catch (error) {
+    console.error("Error toggling play/pause:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.stopVLC = async (req, res) => {
+  try {
+    await stop();
+    res.json({ status: "stopped" });
+  } catch (error) {
+    console.error("Error stopping VLC:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.nextVLC = async (req, res) => {
+  try {
+    await next();
+    res.json({ status: "next track" });
+  } catch (error) {
+    console.error("Error going to next track:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.setVLCVolume = async (req, res) => {
+  try {
+    const { volume } = req.body;
+    if (typeof volume !== "number") {
+      return res.status(400).json({ error: "Volume must be a number" });
+    }
+    await setVolume(volume);
+    res.json({ status: `volume set to ${volume}` });
+  } catch (error) {
+    console.error("Error setting volume:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
