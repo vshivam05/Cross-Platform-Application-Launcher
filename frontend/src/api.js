@@ -1,5 +1,5 @@
 // const API = "http://localhost:2354/api";
-const API = "http://192.168.1.105:2354/api";
+const API = " http://192.168.1.187:2354/api";
 
 
 export async function fetchApps() {

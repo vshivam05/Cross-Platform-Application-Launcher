@@ -10,5 +10,11 @@
     "name": "Google.com",
     "path": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     "param": "https://www.google.com"
+  },
+  {
+    "id": 1745519817214,
+    "name": "youtube2",
+    "path": " C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "param": "https://www.youtube.com/"
   }
 ]

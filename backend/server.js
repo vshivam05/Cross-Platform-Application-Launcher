@@ -14,6 +14,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use("/api", appRoutes);
 
-app.listen(2354, '192.168.1.105', () => {
-  console.log('Server running on http://192.168.1.105:2354');
+app.listen(2354, '192.168.1.187', () => {
+  console.log('Server running on http://192.168.1.187:2354');
 });

@@ -1,7 +1,14 @@
 const { readApps, writeApps } = require("../utils/fileManager");
 const { launch, kill } = require("../services/launcherService");
+const {
+  launchVLC,
+  connectToVLC,
+  sendCommand,
+  killMediaPlayer,
+} = require("../services/mediaPlayerService");
 
 let runningProcess = null;
+let mediaPlayerRunning = false;
 
 exports.getApps = (req, res) => {
   res.json(readApps());
@@ -22,10 +29,20 @@ exports.deleteApp = (req, res) => {
   res.sendStatus(204);
 };
 
-exports.launchApp = (req, res) => {
+exports.launchApp = async (req, res) => {
   try {
-    runningProcess = launch(req.body.path, req.body.param);
-    res.send({ status: "launched" });
+    if (req.body.name === "vlc") {
+      if (mediaPlayerRunning) {
+        return res.status(400).json({ error: "Media player already running" });
+      }
+      mediaPlayerRunning = true;
+      launchVLC(req.body.path, req.body.param);
+      await connectToVLC();
+      res.send({ status: "media player launched" });
+    } else {
+      runningProcess = launch(req.body.path, req.body.param);
+      res.send({ status: "launched" });
+    }
   } catch (error) {
     console.error("Error launching app:", error.message);
     res.status(500).json({ error: error.message });
@@ -33,9 +50,25 @@ exports.launchApp = (req, res) => {
 };
 
 exports.quitApp = (req, res) => {
+  if (mediaPlayerRunning) {
+    killMediaPlayer();
+    mediaPlayerRunning = false;
+    return res.send({ status: "media player stopped" });
+  }
   if (runningProcess) {
     kill(runningProcess);
     runningProcess = null;
   }
   res.send({ status: "stopped" });
+};
+
+exports.mediaPlayerControl = async (req, res) => {
+  try {
+    const { command } = req.body;
+    await sendCommand(command);
+    res.send({ status: "command sent" });
+  } catch (error) {
+    console.error("Error sending media player command:", error.message);
+    res.status(500).json({ error: error.message });
+  }
 };
