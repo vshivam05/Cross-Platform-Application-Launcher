@@ -6,6 +6,8 @@ let mediaPlayerProcess = null;
 let client = null;
 
 
+
+
 function launchVLC(path, param = "") {
   if (mediaPlayerProcess) {
     killMediaPlayer();
